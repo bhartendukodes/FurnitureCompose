@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">NavigationAndPaging</string>
+    <string name="make_your">MAKE YOUR</string>
+    <string name="home_beautiful">HOME BEAUTIFUL</string>
+    <string name="splash_quotes">The best simple place where you discover most wonderful furnitures and make your home beautiful</string>
+    <string name="hello">Hello !</string>
+    <string name="back">WELCOME BACK</string>
+    <string name="ForgotPassword">Forgot Password</string>
+    <string name="sign_up">SIGN UP\n</string>
+    <string name="welcome">WELCOME\n</string>
+    <string name="bruno_pham">Bruno Pham</string>
+    <string name="bruno_pham_email">brunopham33@gmail.com</string>
+    <string name="my_order">My Orders</string>
+    <string name="ten_orders">Already have 10 orders</string>
+</resources>
