@@ -45,25 +45,27 @@ import com.example.navigationandpaging.ui.screens.splash.splashScreen
 @Composable
 fun MyAppNav(navHostController: NavHostController) {
 
-    val currentDestination by
-    navHostController.currentBackStackEntryAsState()
+    // Current route ko track karne ke liye state variable. Yeh humein batayega ki user app mein kahan par hai.
+    val currentDestination by navHostController.currentBackStackEntryAsState()
 
+    // Navigation options ko set karne ke liye function. Yeh navigation behavior ko customize karta hai.
     fun getNavOption() = navOptions {
-        popUpTo(  homeScreenNavRoute) {
-            saveState = true
+        // User jab navigate karta hai, to yeh define karta hai ki app ko kis screen pe le jana hai.
+        popUpTo(homeScreenNavRoute) {
+            saveState = true // Isse state save ho jayegi jab user navigate karta hai.
         }
-        // Avoid multiple copies of the same destination when
-        // reselecting the same item
-        launchSingleTop = true
-        // Restore state when reselecting a previously selected item
-        restoreState = true
+        launchSingleTop = true // Yeh ensure karta hai ki ek hi instance run ho agar top pe already hai to.
+        restoreState = true // Navigate karne par saved state ko restore karta hai.
     }
 
+    // Bottom navigation bar ko show karne ya na karne ka decision yahaan hota hai, based on current route.
     val showBottomNav = when (currentDestination?.destination?.route) {
+        // Agar current route inmein se koi bhi hai to true return karega, matlab bottom nav show karega.
         homeScreenNavRoute, orderScreenNavRoute, favoriteScreenNavRoute, profileScreenNavRoute -> true
-        else -> false
+        else -> false // Agar koi aur route hai to false return karega, matlab bottom nav nahi dikhayega.
     }
 
+    // Bottom navigation items ki list. Yeh mutable state of hai takki dynamically change ho sake.
     val bottomNavItems by remember {
         mutableStateOf(
             listOf(
@@ -71,71 +73,73 @@ fun MyAppNav(navHostController: NavHostController) {
                     title = "Home",
                     icon = Icons.Rounded.Home,
                     onClick = {
+                        // Home screen par navigate karta hai jab user home icon par click karta hai.
                         navHostController.navigateToHomeScreen(getNavOption())
                     }),
                 BottomNavItem(
                     title = "Order",
                     icon = Icons.Rounded.ShoppingCart,
                     onClick = {
+                        // Order screen par navigate karta hai jab user order icon par click karta hai.
                         navHostController.navigateToOrderScreen(getNavOption())
                     }),
                 BottomNavItem(
                     title = "Favorite",
                     icon = Icons.Rounded.BookmarkBorder,
                     onClick = {
+                        // Favorite screen par navigate karta hai jab user favorite icon par click karta hai.
                         navHostController.navigateToFavoriteScreen(getNavOption())
                     }),
                 BottomNavItem(
                     title = "Profile",
                     icon = Icons.Rounded.Person,
                     onClick = {
+                        // Profile screen par navigate karta hai jab user profile icon par click karta hai.
                         navHostController.navigateToProfileScreen(getNavOption())
                     }),
             )
         )
     }
 
+    // Yahaan par UI layout define kiya gaya hai.
     Column(
         modifier = Modifier
-            .animateContentSize()
-            .fillMaxSize()
+            .animateContentSize() // Content size change hone par animation.
+            .fillMaxSize() // Column ko parent ki maximum size tak fill karega.
     ) {
-
+        // NavHost jo navigation graphs ko host karta hai. Yeh app navigation ko manage karta hai.
         NavHost(
-            navController = navHostController,
-            startDestination = splashNavRoute,
-            modifier = Modifier.weight(1f)
+            navController = navHostController, // Navigation controller.
+            startDestination = splashNavRoute, // Starting destination set karta hai.
+            modifier = Modifier.weight(1f) // Takes up all available space minus the space taken by other components.
         ) {
-
             splashScreen {
+                // Splash screen ke baad authentication screen par navigate karne ka setup.
                 navHostController.navigateToAuthentication(
                     navOptions = navOptions {
                         popUpTo(route = splashNavRoute){
-                            inclusive = true
-                            saveState = false
+                            inclusive = true // Splash screen ko back stack se hata deta hai.
+                            saveState = false // Splash screen ka state save nahi karta.
                         }
                     }
                 )
             }
 
+            // SignIn, Home, Product navigation graphs ko yahaan include kiya gaya hai.
             signInNavGraph(navController = navHostController)
-
             homeNavGraph(navController = navHostController)
-
             productNavGraph(navController = navHostController)
-
         }
 
+        // Bottom navigation bar ko show karne ya na karne ka logic yahaan implement kiya gaya hai.
         AnimatedVisibility(
-            visible = showBottomNav,
+            visible = showBottomNav, // Yeh decide karta hai ki bottom nav dikhana hai ya nahi.
         ) {
+            // Custom bottom navigation bar component, jismein items aur current route pass kiya gaya hai.
             MyBottomNavigation(
                 items = bottomNavItems,
                 currentRoute = currentDestination?.destination?.route
             )
         }
-
     }
-
-
 }
